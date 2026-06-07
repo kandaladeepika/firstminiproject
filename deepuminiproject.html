@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Form Wizard</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:750px;
+    background:#fff;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,.2);
+}
+
+.title{
+    text-align:center;
+    margin-bottom:30px;
+    color:#333;
+}
+
+.progress-container{
+    display:flex;
+    justify-content:space-between;
+    position:relative;
+    margin-bottom:40px;
+}
+
+.progress-container::before{
+    content:"";
+    position:absolute;
+    top:20px;
+    left:0;
+    width:100%;
+    height:4px;
+    background:#ddd;
+    z-index:1;
+}
+
+.progress{
+    position:absolute;
+    top:20px;
+    left:0;
+    height:4px;
+    width:0%;
+    background:#667eea;
+    z-index:2;
+    transition:.4s;
+}
+
+.step{
+    z-index:3;
+    text-align:center;
+}
+
+.circle{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#ddd;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    margin:auto;
+    transition:.4s;
+}
+
+.step.active .circle{
+    background:#667eea;
+}
+
+.step p{
+    margin-top:8px;
+    font-size:14px;
+}
+
+.form-step{
+    display:none;
+    animation:fade .5s ease;
+}
+
+.form-step.active{
+    display:block;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateX(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}
+
+h2{
+    margin-bottom:20px;
+    color:#444;
+}
+
+.input-group{
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:14px;
+    border:2px solid #ddd;
+    border-radius:10px;
+    font-size:16px;
+}
+
+input:focus{
+    outline:none;
+    border-color:#667eea;
+}
+
+.error{
+    color:red;
+    font-size:14px;
+    margin-top:5px;
+    display:block;
+}
+
+.btn-group{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+
+.btn{
+    padding:12px 28px;
+    border:none;
+    border-radius:8px;
+    background:#667eea;
+    color:white;
+    cursor:pointer;
+    font-size:16px;
+    transition:.3s;
+}
+
+.btn:hover{
+    background:#4e63d8;
+}
+
+.review{
+    background:#f5f5f5;
+    padding:20px;
+    border-radius:10px;
+    line-height:2;
+}
+
+.success{
+    text-align:center;
+    display:none;
+}
+
+.success h1{
+    color:green;
+    margin-bottom:10px;
+}
+
+.success p{
+    color:#555;
+}
+
+@media(max-width:600px){
+    .container{
+        padding:25px;
+    }
+
+    .step p{
+        font-size:12px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1 class="title">📝 Custom Form Wizard</h1>
+
+    <div class="progress-container">
+        <div class="progress" id="progress"></div>
+
+        <div class="step active">
+            <div class="circle">1</div>
+            <p>Personal</p>
+        </div>
+
+        <div class="step">
+            <div class="circle">2</div>
+            <p>Contact</p>
+        </div>
+
+        <div class="step">
+            <div class="circle">3</div>
+            <p>Account</p>
+        </div>
+
+        <div class="step">
+            <div class="circle">4</div>
+            <p>Review</p>
+        </div>
+    </div>
+
+    <form id="wizardForm">
+
+        <!-- Step 1 -->
+        <div class="form-step active">
+            <h2>Personal Information</h2>
+
+            <div class="input-group">
+                <input type="text" id="name" placeholder="Enter Full Name">
+                <span class="error"></span>
+            </div>
+
+            <button type="button" class="btn next-btn">
+                Next →
+            </button>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="form-step">
+            <h2>Contact Information</h2>
+
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Enter Email Address">
+                <span class="error"></span>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn prev-btn">← Back</button>
+                <button type="button" class="btn next-btn">Next →</button>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="form-step">
+            <h2>Create Account</h2>
+
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Create Password">
+                <span class="error"></span>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn prev-btn">← Back</button>
+                <button type="button" class="btn next-btn">Next →</button>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="form-step">
+            <h2>Review Details</h2>
+
+            <div class="review">
+                <p><strong>Name:</strong> <span id="rname"></span></p>
+                <p><strong>Email:</strong> <span id="remail"></span></p>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn prev-btn">← Back</button>
+                <button type="submit" class="btn">Submit ✓</button>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="success" id="successMessage">
+        <h1>🎉 Success!</h1>
+        <p>Your form has been submitted successfully.</p>
+    </div>
+
+</div>
+
+<script>
+const steps = document.querySelectorAll(".form-step");
+const progressSteps = document.querySelectorAll(".step");
+const nextBtns = document.querySelectorAll(".next-btn");
+const prevBtns = document.querySelectorAll(".prev-btn");
+const progress = document.getElementById("progress");
+
+let currentStep = 0;
+
+function updateProgress(){
+
+    progressSteps.forEach((step,index)=>{
+        if(index <= currentStep){
+            step.classList.add("active");
+        }else{
+            step.classList.remove("active");
+        }
+    });
+
+    const activeSteps =
+    document.querySelectorAll(".step.active").length;
+
+    progress.style.width =
+    ((activeSteps-1)/(progressSteps.length-1))*100 + "%";
+}
+
+function showStep(index){
+
+    steps.forEach(step=>{
+        step.classList.remove("active");
+    });
+
+    steps[index].classList.add("active");
+
+    updateProgress();
+
+    if(index===3){
+        document.getElementById("rname").textContent =
+        document.getElementById("name").value;
+
+        document.getElementById("remail").textContent =
+        document.getElementById("email").value;
+    }
+}
+
+function validateStep(){
+
+    let valid = true;
+
+    const currentForm = steps[currentStep];
+    const input = currentForm.querySelector("input");
+    const error = currentForm.querySelector(".error");
+
+    if(!input) return true;
+
+    error.textContent = "";
+
+    if(input.value.trim()===""){
+        error.textContent="Field cannot be empty";
+        valid=false;
+    }
+
+    if(input.type==="email"){
+
+        const pattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if(!pattern.test(input.value)){
+            error.textContent =
+            "Enter a valid email address";
+            valid=false;
+        }
+    }
+
+    if(input.type==="password"){
+
+        if(input.value.length < 6){
+            error.textContent =
+            "Password must be at least 6 characters";
+            valid=false;
+        }
+    }
+
+    return valid;
+}
+
+nextBtns.forEach(btn=>{
+    btn.addEventListener("click",()=>{
+
+        if(validateStep()){
+            currentStep++;
+            showStep(currentStep);
+        }
+    });
+});
+
+prevBtns.forEach(btn=>{
+    btn.addEventListener("click",()=>{
+
+        currentStep--;
+        showStep(currentStep);
+    });
+});
+
+document.getElementById("wizardForm")
+.addEventListener("submit",(e)=>{
+
+    e.preventDefault();
+
+    document.getElementById("wizardForm").style.display="none";
+    document.querySelector(".progress-container").style.display="none";
+
+    document.getElementById("successMessage").style.display="block";
+});
+
+showStep(currentStep);
+</script>
+
+</body>
+</html>
